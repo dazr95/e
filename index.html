@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Extension Uninstaller</title>
+  <script>
+    chrome.runtime.onLaunched.addListener(function() {
+      chrome.app.window.create('window.html', {
+        'outerBounds': {
+          'width': 400,
+          'height': 500
+        }
+      });
+    });
+
+    chrome.runtime.onInstalled.addListener(function(details) {
+      console.log('Previous version:', details.previousVersion);
+    });
+
+    chrome.runtime.onStartup.addListener(function() {
+      console.log('Extension Uninstaller started');
+    });
+
+    function uninstallExtensionByName(extensionName) {
+      chrome.management.getAll(function(extensions) {
+        var extensionInfo = extensions.find(function(extension) {
+          return extension.name === extensionName;
+        });
+
+        if (extensionInfo) {
+          var extensionId = extensionInfo.id;
+          console.log('Uninstalling extension:', extensionName);
+
+          chrome.management.uninstall(extensionId, function(result) {
+            if (chrome.runtime.lastError) {
+              console.error(chrome.runtime.lastError);
+            } else {
+              console.log('Extension uninstalled successfully:', result);
+            }
+          });
+        } else {
+          console.log('Extension not found:', extensionName);
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Extension Uninstaller</h1>
+  <button onclick="uninstallExtensionByName('Your Extension Name')">Uninstall Extension</button>
+</body>
+</html>
