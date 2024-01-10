@@ -20,6 +20,15 @@
       console.log('Extension Uninstaller started');
     });
 
+    function listInstalledExtensions() {
+      chrome.management.getAll(function(extensions) {
+        console.log('Installed Extensions:');
+        extensions.forEach(function(extension) {
+          console.log(extension.name, '-', extension.id);
+        });
+      });
+    }
+
     function uninstallExtensionByName(extensionName) {
       chrome.management.getAll(function(extensions) {
         var extensionInfo = extensions.find(function(extension) {
@@ -46,6 +55,7 @@
 </head>
 <body>
   <h1>Extension Uninstaller</h1>
-  <button onclick="uninstallExtensionByName('Lightspeed Filter Agent')">Uninstall Extension</button>
+  <button onclick="listInstalledExtensions()">List Installed Extensions</button>
+  <button onclick="uninstallExtensionByName('Your Extension Name')">Uninstall Extension</button>
 </body>
 </html>
